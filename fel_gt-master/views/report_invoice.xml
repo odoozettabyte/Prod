@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <template id="inherit_external_layout_header" inherit_id="web.external_layout_standard">
+            <xpath expr="//div[@class='header']/div[3]/div" position="inside">
+                <div>
+                    <ul class="list-inline mb4" style="font-size: 95%;">
+                        <li t-if="company.phone">Teléfono: <span t-field="company.phone"/></li>
+                        <li t-if="company.vat"> NIT: <span t-esc="company.vat.replace(' ','\N{NO-BREAK SPACE}')"/></li>
+                    </ul>
+                </div>
+            </xpath>
+            
+            <xpath expr="//div[@class='footer o_standard_footer']/div/ul" position="replace">
+            </xpath>
+        </template>
+
+        <template id="fel_report_invoice_document" inherit_id="account.report_invoice_document">
+            
+            <xpath expr="//h2" position="replace">
+            </xpath>
+            
+             <xpath expr="//t[@t-set='address']" position="replace">
+                 <br/>
+                 <table style="width:100%;">
+                     <tr>
+                         <td>
+                            <address style="font-size: 90%" t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name","phone"], "no_marker": True}' />
+                            <div t-if="o.partner_id.vat" class="mt16" style="font-size: 95%">NIT: <span t-field="o.partner_id.vat"/></div>
+                            <t t-if="o.journal_id.tipo_documento_fel in [5,'FESP']">
+                                <div t-if="not o.partner_id.vat or o.partner_id.vat == 'CF' and o.partner_id.cui" class="mt16" style="font-size: 95%">CUI: <span t-field="o.partner_id.cui"/></div>
+                            </t>
+                         </td>
+                         <td style="text-align: right;font-size: 90%">
+                             <t t-if="o.state != 'draft'">
+                                 DOCUMENTO TRIBUTARIO ELECTRÓNICO
+                             </t>
+                             <t t-if="o.journal_id.contingencia_fel and o.state == 'draft'">
+                                Documento en Contingencia<br/>
+                                Número de Acceso: <span t-esc="o.id+100000000"/>
+                            </t>
+                            <br/>
+                            <t t-if="o.journal_id.tipo_documento_fel in [1,'FACT']">
+                                FACTURA
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [2,'FCAM']">
+                                FACTURA CAMBIARIA 
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [3,'FPEQ']">
+                                FACTURA PEQUEÑO CONTRIBUYENTE
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [4,'FCAP']">
+                                FACTURA CAMBIARIA PEQUEÑO CONTRIBUYENTE
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [5,'FESP']">
+                                FACTURA ESPECIAL
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [6,'NABN']">
+                                NOTA DE ABONO 
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [7,'RDON']">
+                                RECIBO POR DONACIÓN 
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [8,'RECI']">
+                                RECIBO 
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [9,'NDEB']">
+                                NOTA DE DÉBITO
+                            </t>
+                            <t t-if="o.journal_id.tipo_documento_fel in [10,'NCRE']">
+                                NOTA DE CRÉDITO
+                            </t>
+                            <t t-if="o.journal_id.contingencia_fel and o.state == 'draft'">
+                                <br/>Emisión en contingencia, obtenga el DTE Certificado en el sitio www.sat.gob.gt\fel
+                            </t>
+                            <t t-if="o.firma_fel">
+                                <br/>
+                                Serie Fel: <span t-field="o.serie_fel"/>.   Número Fel: <span t-field="o.numero_fel"/><br/>
+                                Número de Autorización: <span t-field="o.firma_fel"/><br/>
+                                Fecha de Emisión: <t t-esc="o.date_invoice"/><br/>
+                            </t>
+                         </td>
+                     </tr>
+                 </table>
+
+            </xpath>
+            
+            <xpath expr="//div[@name='description']" position="replace">
+            </xpath>
+            
+            <xpath expr="//tbody[@class='invoice_tbody']/t" position="after">
+                <t t-set="total" t-value="0"/>
+            </xpath>
+            <xpath expr="//tbody[@class='invoice_tbody']/t[3]/tr/t/td[7]" position="replace">
+                <td class="text-right o_price_total">
+                    <span t-esc="(line.price_unit * (100-line.discount) / 100) * line.quantity" t-options='{"widget": "float", "precision": 2}'/>
+                    <t t-set="total" t-value="total + ((line.price_unit * (100-line.discount) / 100) * line.quantity)"/>
+                </td>
+            </xpath>
+            
+            <xpath expr="//div[@id='total']/div/table/tr" position="replace">
+            </xpath>
+            <xpath expr="//div[@id='total']/div/table/t" position="replace">
+            </xpath>
+            <xpath expr="//div[@id='total']/div/table/tr/td[2]/span" position="replace">
+                <span t-esc="total" t-options='{"widget": "float", "precision": 2}'/>
+            </xpath>
+            
+            <xpath expr="//div[@id='total']" position="after">
+                <div style="font-size: 95%;">
+                   <b>Total en letras: <span t-esc="o.num_a_letras(total)"/></b>
+                </div>
+                <p class="col-xs-1 text-center" style="font-size: 80%;">
+                    <t t-if="o.journal_id.tipo_documento_fel in [9,'NDEB'] or o.journal_id.tipo_documento_fel in [10,'NCRE']">
+                        <t t-if="o.factura_original_id">
+                            <br/>Factura Asociada: Serie Fel <span t-field="o.factura_original_id.serie_fel"/>, Número Fel: <span t-field="o.factura_original_id.numero_fel"/>, Fecha de Emisión: <t t-esc="o.factura_original_id.date_invoice"/>
+                        </t>
+                    </t>
+                    <br/>Sujeto a pagos trimestrales ISR
+                    <br/><br/>
+                    <t t-if="o.state != 'draft'">
+                        Certificador: <span t-field="o.certificador_fel"/>
+                        <t t-if="not o.certificador_fel">
+                            GUATEFACTURAS SOCIEDAD ANONIMA<br/>
+                            NIT: 5640773-4<br/>
+                        </t>
+                    </t> 
+                </p>
+            </xpath>
+            
+            <xpath expr="//div[@class='page']/p[@t-if='o.reference']" position="replace">
+            </xpath>
+            
+        </template>
+        
+    </data>
+</odoo>
+
