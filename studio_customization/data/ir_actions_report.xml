@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+  <record id="studio_customization.presupuesto_pedido_72159c43-5eb5-4749-a7a6-d22e85eff921" model="ir.actions.report" context="{'studio': True}">
+    <field name="attachment" eval="False"/>
+    <field name="attachment_use" eval="False"/>
+    <field name="binding_model_id" ref="sale.model_sale_order"/>
+    <field name="binding_type">report</field>
+    <field name="binding_view_types">list,form</field>
+    <field name="groups_id" eval="[(6, 0, [])]"/>
+    <field name="model">sale.order</field>
+    <field name="multi" eval="False"/>
+    <field name="name">Presupuesto / Pedido con foto</field>
+    <field name="paperformat_id" eval="False"/>
+    <field name="report_name">sale.report_saleorder_copy_1</field>
+    <field name="report_type">qweb-pdf</field>
+  </record>
+</odoo>
