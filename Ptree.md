@@ -1,0 +1,8 @@
+# Changelog
+## [0.0.1] - 2022-03-03
+### Added Submodules to Electronic Invoice Guatemala with Infile
+### git@github.com:rocketgithub/l10n_gt_extra.git
+### git@github.com:rocketgithub/fel_gt.git
+### git@github.com:rocketgithub/fel_infile.git
+### git@github.com:rocketgithub/pos_gt.git
+### git@github.com:rocketgithub/pos_fel.git
