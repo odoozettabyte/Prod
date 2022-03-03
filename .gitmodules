@@ -17,3 +17,8 @@
 	path = rocketgithub/pos_gt
 	url = git@github.com:rocketgithub/pos_gt.git
 	branch = 15.0
+
+[submodule "rocketgithub/pos_fel"]
+	path = rocketgithub/pos_fel
+	url = git@github.com:rocketgithub/pos_fel.git
+	branch = 15.0
