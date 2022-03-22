@@ -22,8 +22,3 @@
 	path = rocketgithub/pos_fel
 	url = git@github.com:rocketgithub/pos_fel.git
 	branch = 15.0
-
-[submodule "product_image_sol"]
-	path = product_image_sol
-	url = git@github.com:jalfonsoglz/product_image_sol.git
-	branch = main
